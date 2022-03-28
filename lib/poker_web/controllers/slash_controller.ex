@@ -5,35 +5,15 @@ defmodule PokerWeb.SlashController do
 
   alias Poker.SlashCommands
 
-  plug(:cache_command)
+  def index(conn, %{"text" => text, "channel_id" => channel}) do
+    result =
+      text
+      |> String.trim()
+      |> SlashCommands.execute_command(channel)
 
-  @lifecycle_commands ["start", "reset", "end", "help"]
-
-  def index(conn, %{"text" => text, "channel_id" => channel} = params) do
-    IO.inspect(params)
-
-    result = SlashCommands.perform_action(String.split(text), channel)
-
-    conn
-    |> json(result)
+    case result do
+      nil -> send_resp(conn, 200, "")
+      result -> json(conn, result)
+    end
   end
-
-  defp cache_command(%{body_params: %{"text" => "issue" <> rest = issue}} = conn, _opts) do
-    IO.inspect(issue, label: "THIS IS ISSUE")
-  end
-
-  defp cache_command(%{body_params: %{"text" => text}} = conn, _opts)
-       when text in @lifecycle_commands,
-       do: IO.inspect("LIFECYCLE GOING")
-
-  defp cache_command(%{body_params: %{"text" => text}} = conn, _opts),
-    do:
-      conn
-      |> json(%{
-        type: "mrkdwn",
-        response_type: "ephemeral",
-        text: """
-        Command `#{text}` is not available. Use `/poker help` to view list of available commands.
-        """
-      })
 end

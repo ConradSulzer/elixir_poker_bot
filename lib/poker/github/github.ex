@@ -4,10 +4,6 @@ defmodule Poker.Github do
   """
 
   def get_client() do
-    thing = "token #{Application.get_env(:poker, :github_access_token)}"
-
-    IO.inspect(thing)
-
     middleware = [
       {Tesla.Middleware.BaseUrl, Application.get_env(:poker, :github_api_url)},
       {Tesla.Middleware.Headers,

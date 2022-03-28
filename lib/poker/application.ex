@@ -11,9 +11,10 @@ defmodule Poker.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Poker.PubSub},
       # Start the Endpoint (http/https)
-      PokerWeb.Endpoint
+      PokerWeb.Endpoint,
       # Start a worker by calling: Poker.Worker.start_link(arg)
       # {Poker.Worker, arg}
+      Poker.PokerSession
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

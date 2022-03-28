@@ -1,12 +1,18 @@
 defmodule Poker.PokerSession do
   @moduledoc """
-  genserver to manage poker session
+  genserver to manage poker session.
   """
 
   use GenServer
 
+  alias Poker.Github
+
   @initial_state %{
-    voters: []
+    voters: [],
+    issue: nil,
+    title: nil,
+    issue_link: nil,
+    channel: nil
   }
 
   # Server
@@ -14,24 +20,36 @@ defmodule Poker.PokerSession do
     {:ok, state}
   end
 
-  def handle_call(:get, _from, current_state) do
-    {:reply, current_state, current_state}
-  end
+  def handle_call(:get, _from, state), do: {:reply, state, state}
 
-  def handle_cast({:set_issue, params}, state) do
-    {:noreply, Map.merge(state, params)}
+  def handle_cast(:reset, _state), do: {:noreply, @initial_state}
+
+  def handle_cast(
+        {:set_issue, %{issue: issue_number, channel: channel} = params},
+        current_state
+      ) do
+    with {:ok, %{"title" => title, "url" => url}} <- Github.get_issue(issue_number) do
+      params =
+        params
+        |> Map.put(:title, title)
+        |> Map.put(:issue_link, url)
+
+      {:noreply, Map.merge(current_state, params)}
+    else
+      {:error, message} -> {:noreply, current_state}
+    end
   end
 
   # Client
-  def start() do
+  def start_link(_) do
     GenServer.start_link(__MODULE__, @initial_state, name: :poker)
   end
 
-  def get_state() do
-    GenServer.call(:poker, :get)
-  end
+  def get_state(), do: GenServer.call(:poker, :get)
 
-  def set_issue(issue_number) do
-    GenServer.cast(:poker, {:set_issue, %{issue: issue_number}})
+  def reset_state(), do: GenServer.cast(:poker, :reset)
+
+  def set_issue(issue_number, channel) do
+    GenServer.cast(:poker, {:set_issue, %{issue: issue_number, channel: channel}})
   end
 end
