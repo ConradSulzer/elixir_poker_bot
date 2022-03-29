@@ -2,26 +2,25 @@ defmodule PokerWeb.Router do
   use PokerWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {PokerWeb.LayoutView, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {PokerWeb.LayoutView, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
-    plug Poker.Plug.VerifySlack
+    plug(:accepts, ["json"])
+    plug(Poker.Plug.VerifySlack)
   end
 
   scope "/api", PokerWeb do
-    pipe_through :api
+    pipe_through(:api)
 
-    post "/slash", SlashController, :index
-    # post "/action", PageController, :index
+    post("/slash", SlashController, :index)
+    post("/interactive", InteractiveController, :index)
   end
-
 
   # Enables LiveDashboard only for development
   #
@@ -34,9 +33,9 @@ defmodule PokerWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: PokerWeb.Telemetry
+      live_dashboard("/dashboard", metrics: PokerWeb.Telemetry)
     end
   end
 
@@ -46,9 +45,9 @@ defmodule PokerWeb.Router do
   # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

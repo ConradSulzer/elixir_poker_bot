@@ -14,4 +14,15 @@ defmodule Poker.PokerSession.PokerMessenger do
 
     Slack.send_message(%{channel: channel, as_user: true, blocks: blocks})
   end
+
+  def send_new_vote(%{channel: channel, voters: voters, ts: ts} = session) do
+    blocks = [
+      MessageBlocks.github_title_block(session),
+      MessageBlocks.vote_section_header(),
+      MessageBlocks.vote_options(),
+      MessageBlocks.votes(voters)
+    ]
+
+    Slack.update_message(%{channel: channel, as_user: true, blocks: blocks, ts: ts})
+  end
 end

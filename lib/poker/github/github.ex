@@ -32,7 +32,7 @@ defmodule Poker.Github do
   end
 
   def add_label(issue_number, label) do
-    with {:ok, response} <-
+    with {:ok, _response} <-
            Tesla.post(
              get_client(),
              "#{Application.get_env(:poker, :github_issue_path)}#{issue_number}/labels",

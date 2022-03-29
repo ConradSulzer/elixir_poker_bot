@@ -1,5 +1,7 @@
 defmodule PokerWeb.SlashController do
-  @moduledoc false
+  @moduledoc """
+  controller for interacting with slack slash commands
+  """
 
   use PokerWeb, :controller
 
@@ -11,9 +13,6 @@ defmodule PokerWeb.SlashController do
       |> String.trim()
       |> SlashCommands.execute_command(channel)
 
-    case result do
-      nil -> send_resp(conn, 200, "")
-      result -> json(conn, result)
-    end
+    json(conn, result)
   end
 end

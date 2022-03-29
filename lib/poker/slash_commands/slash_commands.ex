@@ -37,7 +37,7 @@ defmodule Poker.SlashCommands do
 
     case Integer.parse(issue_number) do
       {x, ""} ->
-        PokerSession.set_issue(issue_number, channel)
+        PokerSession.set_issue(x, channel)
 
         %{
           type: "mrkdwn",

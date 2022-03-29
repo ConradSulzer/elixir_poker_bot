@@ -9,7 +9,7 @@ defmodule Poker.PokerSession do
   alias Poker.PokerSession.PokerMessenger
 
   @initial_state %{
-    voters: [],
+    voters: %{},
     issue: nil,
     title: nil,
     issue_link: nil,
@@ -27,10 +27,10 @@ defmodule Poker.PokerSession do
   def handle_cast(:reset, _state), do: {:noreply, @initial_state}
 
   def handle_cast(
-        {:set_issue, %{issue: issue_number, channel: channel} = params},
+        {:set_issue, %{issue: issue_number} = params},
         current_state
       ) do
-    with {:ok, %{"title" => title, "html_url" => url} = deets} <- Github.get_issue(issue_number) do
+    with {:ok, %{"title" => title, "html_url" => url}} <- Github.get_issue(issue_number) do
       params =
         @initial_state
         |> Map.merge(params)
@@ -41,8 +41,23 @@ defmodule Poker.PokerSession do
 
       {:noreply, Map.put(params, :ts, ts)}
     else
-      {:error, message} -> {:noreply, current_state}
+      {:error, _message} -> {:noreply, current_state}
     end
+  end
+
+  def handle_cast({:vote, vote}, current_state) do
+    IO.inspect(current_state, label: "CURRENT STATE")
+
+    state =
+      current_state.voters
+      |> Map.merge(vote)
+      |> (&Map.put(current_state, :voters, &1)).()
+
+    IO.inspect(state, label: "THIS IS STATE")
+
+    PokerMessenger.send_new_vote(state)
+
+    {:noreply, state}
   end
 
   # Client
@@ -56,5 +71,9 @@ defmodule Poker.PokerSession do
 
   def set_issue(issue_number, channel) do
     GenServer.cast(:poker, {:set_issue, %{issue: issue_number, channel: channel}})
+  end
+
+  def vote(user_id, value) do
+    GenServer.cast(:poker, {:vote, %{"#{user_id}" => value}})
   end
 end

@@ -52,4 +52,20 @@ defmodule Poker.Slack.MessageBlocks do
       elements: elements
     }
   end
+
+  def votes(voters) do
+    voter_string =
+      voters
+      |> Enum.map(&":white_check_mark: <@#{elem(&1, 0)}>")
+      |> Enum.join(" ")
+
+    %{
+      type: "section",
+      block_id: "voter_list",
+      text: %{
+        type: "mrkdwn",
+        text: voter_string
+      }
+    }
+  end
 end
