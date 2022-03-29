@@ -6,13 +6,15 @@ defmodule Poker.PokerSession do
   use GenServer
 
   alias Poker.Github
+  alias Poker.PokerSession.PokerMessenger
 
   @initial_state %{
     voters: [],
     issue: nil,
     title: nil,
     issue_link: nil,
-    channel: nil
+    channel: nil,
+    ts: nil
   }
 
   # Server
@@ -28,13 +30,16 @@ defmodule Poker.PokerSession do
         {:set_issue, %{issue: issue_number, channel: channel} = params},
         current_state
       ) do
-    with {:ok, %{"title" => title, "url" => url}} <- Github.get_issue(issue_number) do
+    with {:ok, %{"title" => title, "html_url" => url} = deets} <- Github.get_issue(issue_number) do
       params =
-        params
+        @initial_state
+        |> Map.merge(params)
         |> Map.put(:title, title)
         |> Map.put(:issue_link, url)
 
-      {:noreply, Map.merge(current_state, params)}
+      {:ok, _channel, ts} = PokerMessenger.send_initial_card(params)
+
+      {:noreply, Map.put(params, :ts, ts)}
     else
       {:error, message} -> {:noreply, current_state}
     end

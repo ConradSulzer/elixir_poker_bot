@@ -37,10 +37,15 @@ defmodule Poker.SlashCommands do
 
     case Integer.parse(issue_number) do
       {x, ""} ->
-        IO.inspect(x, label: "THIS SI ISSUE")
         PokerSession.set_issue(issue_number, channel)
 
-        nil
+        %{
+          type: "mrkdwn",
+          response_type: "in_channel",
+          text: """
+          :man-running::dash: Fetching issue #{issue_number}...
+          """
+        }
 
       _ ->
         %{

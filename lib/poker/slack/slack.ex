@@ -1,11 +1,9 @@
-defmodule Poker.Slack do
+defmodule Poker.Slack.Slack do
   @moduledoc """
   a module for functions relating to interacting with Slack
   """
 
   def get_client() do
-    IO.inspect(Application.get_env(:poker, :slack_base_url), label: "THIS IS URL")
-
     middleware = [
       {Tesla.Middleware.BaseUrl, Application.get_env(:poker, :slack_base_url)},
       {Tesla.Middleware.Headers,

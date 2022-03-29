@@ -24,7 +24,7 @@ defmodule Poker.Github do
              get_client(),
              "#{Application.get_env(:poker, :github_issue_path)}#{issue_number}"
            ) do
-      params = Map.take(response.body, ["title", "url"])
+      params = Map.take(response.body, ["title", "html_url"])
       {:ok, params}
     else
       {:error, message} -> {:error, message}
