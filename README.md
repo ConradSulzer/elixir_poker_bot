@@ -1,4 +1,5 @@
 # Poker
+A Slack bot for pokering GitHub issues!
 
 ### DEMO
 Join the bot sandbox slack to demo live: https://join.slack.com/t/bot-sandbox-corp/shared_invite/zt-16ef9rods-nU6nn43jNJAL5BfbT4Nzgw.
