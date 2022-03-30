@@ -1,14 +1,14 @@
 # Poker
 
-The first thing you will need to do is create a poker bot app, install it to your workspace and add it to a channel. Find out about Slack basic app setup [`here](https://api.slack.com/authentication/basics#installing). The poker bot will need the following permissions:
+The first thing you will need to do is create a poker bot app, install it to your workspace and add it to a channel. Find out about Slack basic app setup [here](https://api.slack.com/authentication/basics#installing). The app might not use all of the following permissions, but it definitely uses some of them. So, you're gonna want to add these:
 
-channels:join
-chat:write
-chat:write.customize
-commands
-incoming-webhook
-reactions:write
-users:read
+`channels:join`
+`chat:write`
+`chat:write.customize`
+`commands`
+`incoming-webhook`
+`reactions:write`
+`users:read`
 
 ## Running The Bot
 
@@ -35,9 +35,9 @@ Communicate with Slack:
 - Go to your [Slack apps](https://api.slack.com/apps) and choose your poker bot app or create a new one!
 - From the app dashbaord go to "Slash Commands" and create a new command called `/poker`.
 - For the Request URL add your URL with the path `/api/slash` appended to it.
-  Ex. `http://a934-75-213-459-95.ngrok.io/api/slash`
+  - Ex. `http://a934-75-213-459-95.ngrok.io/api/slash`
 - If you are developing locally you can use [`ngrok`](https://ngrok.com/) to expose your `localhost` to the dangers of the web!
 - Save that and then go to "Interactivity & Shortcuts".
 - Turn on "Interactivity"!
 - For the "Request URL" do the same as above except the path is going to be `/api/interactive`.
-  Ex. `http://a934-75-213-459-95.ngrok.io/api/interactive`
+  - Ex. `http://a934-75-213-459-95.ngrok.io/api/interactive`
