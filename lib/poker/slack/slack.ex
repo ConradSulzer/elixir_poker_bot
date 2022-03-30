@@ -25,6 +25,7 @@ defmodule Poker.Slack.Slack do
       {:ok, channel, timestamp}
     else
       {:error, message} -> {:error, message}
+      _ -> {:error, "Something went wrong."}
     end
   end
 
@@ -35,7 +36,7 @@ defmodule Poker.Slack.Slack do
       {:ok, channel, timestamp}
     else
       {:error, message} -> {:error, message}
-      %{"error" => message} -> {:error, message}
+      _ -> {:error, "Something went wrong."}
     end
   end
 end

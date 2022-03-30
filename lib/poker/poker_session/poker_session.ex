@@ -24,7 +24,7 @@ defmodule Poker.PokerSession do
 
   def handle_call(:get, _from, state), do: {:reply, state, state}
 
-  def handle_cast(:reset, _state), do: {:noreply, @initial_state}
+  def handle_cast({:reset, channel}, state), do: {:noreply, Map.merge(@initial_state, channel)}
 
   def handle_cast(
         {:set_issue, %{issue: issue_number} = params},
@@ -90,7 +90,7 @@ defmodule Poker.PokerSession do
 
   def get_state(), do: GenServer.call(:poker, :get)
 
-  def reset_state(), do: GenServer.cast(:poker, :reset)
+  def reset_state(channel), do: GenServer.cast(:poker, {:reset, %{channel: channel}})
 
   def set_issue(issue_number, channel) do
     GenServer.cast(:poker, {:set_issue, %{issue: issue_number, channel: channel}})

@@ -20,8 +20,8 @@ defmodule Poker.SlashCommands do
     }
   end
 
-  def execute_command(command, _channel) when command in ["start", "reset"] do
-    PokerSession.reset_state()
+  def execute_command(command, channel) when command in ["start", "reset"] do
+    PokerSession.reset_state(channel)
 
     %{
       type: "mrkdwn",
