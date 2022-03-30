@@ -1,5 +1,12 @@
 # Poker
 
+### DEMO
+Join the bot sandbox slack to demo live: https://join.slack.com/t/bot-sandbox-corp/shared_invite/zt-16ef9rods-nU6nn43jNJAL5BfbT4Nzgw.
+
+Use `/poker help` to see available commands. There is currently only one valid issue in the connected repo, issue 1.
+
+## Running The Bot
+
 The first thing you will need to do is create a poker bot app, install it to your workspace and add it to a channel. Find out about Slack basic app setup [here](https://api.slack.com/authentication/basics#installing). The app might not use all of the following permissions, but it definitely uses some of them. So, you're gonna want to add these:
 
 `channels:join`
@@ -9,8 +16,6 @@ The first thing you will need to do is create a poker bot app, install it to you
 `incoming-webhook`
 `reactions:write`
 `users:read`
-
-## Running The Bot
 
 To start your Phoenix server:
 
