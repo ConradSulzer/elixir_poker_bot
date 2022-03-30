@@ -47,6 +47,15 @@ config :phoenix, :json_library, Jason
 # Configure Tesla HTTP Client
 config :tesla, adapter: Tesla.Adapter.Hackney
 
+config :poker,
+  slack_signing_secret: System.get_env("SLACK_SIGNING_SECRET"),
+  slack_version: "v0",
+  slack_bot_oauth_token: System.get_env("SLACK_BOT_OAUTH_TOKEN"),
+  slack_base_url: "https://slack.com/api",
+  github_access_token: System.get_env("GITHUB_ACCESS_TOKEN"),
+  github_api_url: "https://api.github.com",
+  github_issue_path: System.get_env("GITHUB_ISSUE_PATH")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
