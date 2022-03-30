@@ -41,23 +41,46 @@ defmodule Poker.PokerSession do
 
       {:noreply, Map.put(params, :ts, ts)}
     else
-      {:error, _message} -> {:noreply, current_state}
+      _ ->
+        PokerMessenger.message_channel(
+          current_state,
+          "Unable to fetch issue `#{issue_number}`. Make sure `#{issue_number}` is a valid issue and try again."
+        )
+
+        {:noreply, current_state}
     end
   end
 
   def handle_cast({:vote, vote}, current_state) do
-    IO.inspect(current_state, label: "CURRENT STATE")
-
     state =
       current_state.voters
       |> Map.merge(vote)
       |> (&Map.put(current_state, :voters, &1)).()
 
-    IO.inspect(state, label: "THIS IS STATE")
-
     PokerMessenger.send_new_vote(state)
 
     {:noreply, state}
+  end
+
+  def handle_cast(:reveal, current_state) do
+    PokerMessenger.send_reveal(current_state)
+
+    {:noreply, current_state}
+  end
+
+  def handle_cast({:add_label, value}, %{issue: issue} = current_state) do
+    with {:ok, _message} <- Github.add_label(issue, "points:#{value}") do
+      PokerMessenger.send_label_assigned(current_state, value)
+      {:noreply, @initial_state}
+    else
+      _ ->
+        PokerMessenger.message_channel(
+          current_state,
+          "Unable to add label `points:#{value}` to issue `##{issue}`."
+        )
+
+        {:noreply, current_state}
+    end
   end
 
   # Client
@@ -75,5 +98,13 @@ defmodule Poker.PokerSession do
 
   def vote(user_id, value) do
     GenServer.cast(:poker, {:vote, %{"#{user_id}" => value}})
+  end
+
+  def reveal() do
+    GenServer.cast(:poker, :reveal)
+  end
+
+  def add_label(value) do
+    GenServer.cast(:poker, {:add_label, value})
   end
 end
