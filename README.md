@@ -47,3 +47,21 @@ Communicate with Slack:
 - Turn on "Interactivity"!
 - For the "Request URL" do the same as above except the path is going to be `/api/interactive`.
   - Ex. `http://a934-75-213-459-95.ngrok.io/api/interactive`
+
+Deploy to Heroku
+
+- Clone/Fork this repo and create a new Heroku app. You can then deploy the app to Heroku via the CLI or from GitHub.
+- In Heroku you will need the following ENV vars:
+```
+GITHUB_ACCESS_TOKEN=<your github access token>
+GITHUB_ISSUE_PATH=</repos/<your org>/<your repo>/issues/>
+SLACK_BOT_OAUTH_TOKEN=<your slack bot oauth token>
+SLACK_SIGNING_SECRET=<your slack signing secret>
+SECRET_KEY_BASE=<you can generate one with phx.gen.secret>
+PHX_HOST=<my-app-name>.herokuapp.com
+```
+- In Heroku under `Settings > Buildpacks` you will need to add this buildpack:
+```
+https://buildpack-registry.s3.amazonaws.com/buildpacks/hashnuke/elixir.tgz
+```
+- In your Slack app set the "Slash Commands" and "Interactive" urls like mentioned above and pointing at your Heroku app. 
